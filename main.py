@@ -31,8 +31,8 @@ class Main:
                         return
                 self.active_maze = randomize_maze_board(get_maze(level))
                 self.active_maze = show_optimal_path(self.active_maze)
-                #start_game(self.active_maze)
-                graph_plot(self)
+                start_game(self.active_maze)
+                #graph_plot(self)
 
 def show_optimal_path(maze):
     path,cost,traversed,visited = find_optimal_path(maze)
