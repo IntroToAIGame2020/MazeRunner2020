@@ -35,6 +35,8 @@ class Main:
                 graph_plot()
 
 
+
+
 def show_optimal_path(maze):
     path,cost = find_optimal_path(maze)
     for i in range(0, len(path)):

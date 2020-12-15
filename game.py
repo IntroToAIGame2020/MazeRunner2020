@@ -1,5 +1,6 @@
 import turtle
 import math
+#from main import find_optimal_path
 
 # Hash map storing cost values associated with cell (x,y) : 1
 score_map = {}
@@ -17,13 +18,14 @@ class Portal(turtle.Turtle):
         def __init__(self, x, y):
                 turtle.Turtle.__init__(self)
                 v=self.getscreen()
-                self.color("red")
+                self.color("green")
                 self.penup()
                 self.speed(0)
                 self.goto(x,y)
 
 portalsH = []
 portalsK = []
+optimal_paths = []
 
 # Function to initialize the maze
 def setup_maze(level, pen, player):
@@ -82,11 +84,11 @@ def setup_maze(level, pen, player):
                                 portalsK.append(Portal(screen_x,screen_y))
 
                         elif character =="G":
-                                pen.shape("square")
+                                pen.shape("classic")
                                 pen.color("green")
                                 pen.goto(screen_x, screen_y)
                                 pen.stamp()
-                                score_map[(screen_x, screen_y)] = 1
+                                score_map[Portal(screen_x, screen_y)] = 1
 
 
 # Function to end the game
@@ -101,7 +103,6 @@ def EndGame():
 
 walls = []
 end_points = []
-optimal_paths = []
 
 def start_game(board):
     # Pen class storing information about the cursor drawing on the screen
@@ -216,6 +217,17 @@ def start_game(board):
                     return True
             else:
                     return False
+
+        def move_to_optimal(self):
+            from main import find_optimal_path
+            path,cost = find_optimal_path(board)
+            for p in path:
+                print(p)
+            for i in range(0, len(path)):
+                x, y = path[i]
+                screen_x = -288 + (x * 24)
+                screen_y = 288 - (y * 24)
+                self.goto(screen_x, screen_y)
     
     wn = turtle.Screen()
     wn.bgcolor("black")
@@ -228,19 +240,21 @@ def start_game(board):
     player = Player()
     setup_maze(board, pen, player)
 
+    turtle.listen()
     turtle.onkey(player.go_left,"Left")
     turtle.onkey(player.go_right,"Right")
     turtle.onkey(player.go_up,"Up")
     turtle.onkey(player.go_down,"Down")
+    turtle.onkey(player.move_to_optimal,"space")
 
     wn.tracer(0)
 
     while True:
-        for portal,next_portal in zip(portalsH,portalsH[1:]):
-                if player.is_collision(portal):
-                    player.goto(next_portal.pos())
+        for portal, next_portal in zip(portalsH, portalsH[1:]):
+            if player.is_collision(portal):
+                player.goto(next_portal.pos())
 
-        for portal,next_portal in zip(portalsK,portalsK[1:]):
-                if player.is_collision(portal):
-                    player.goto(next_portal.pos())
+        for portal, next_portal in zip(portalsK, portalsK[1:]):
+            if player.is_collision(portal):
+                player.goto(next_portal.pos())
         wn.update()
