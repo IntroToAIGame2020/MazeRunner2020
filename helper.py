@@ -69,6 +69,8 @@ def randomize_maze_board(maze):
 class Optimal_path:
     optimal_path = []
     min_cost = 100000000
+    noOfNodesVisited = 0
+    noOfnodeTraversed = 0
 
     def dfs(self, maze, rows, cols, i, j, path, cost, visited):
         neighbours = [(-1,0), (1, 0), (0, -1), (0, 1)]
@@ -77,6 +79,7 @@ class Optimal_path:
             y = j + neighbour[1]
             if x < 0 or y < 0 or x>= rows or y >= cols or ((x,y) in visited) or maze[x][y] == 'X':
                 continue
+            self.noOfNodesVisited += 1
             if(maze[x][y] == 'E'):
                 if(cost < self.min_cost):
                     self.min_cost = cost
@@ -108,12 +111,13 @@ def find_optimal_path(maze):
     visited = set((x, y))
     obj = Optimal_path()
     obj.dfs(maze, rows, cols, x, y, path, cost, visited)
+    obj.noOfnodeTraversed = len(obj.optimal_path)
     print ("min cost w path", obj.optimal_path, obj.min_cost)
     turtle.goto(-250, 300)
     turtle.color("red")
     print("This is the cost:"+str(obj.min_cost))
     turtle.write("Optimal Score:" + str(obj.min_cost))
-    return obj.optimal_path, obj.min_cost
+    return obj.optimal_path, obj.min_cost, obj.noOfnodeTraversed, obj.noOfNodesVisited
 
 
 

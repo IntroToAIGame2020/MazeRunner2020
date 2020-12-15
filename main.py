@@ -31,14 +31,11 @@ class Main:
                         return
                 self.active_maze = randomize_maze_board(get_maze(level))
                 self.active_maze = show_optimal_path(self.active_maze)
-                start_game(self.active_maze)
-                graph_plot()
-
-
-
+                #start_game(self.active_maze)
+                graph_plot(self)
 
 def show_optimal_path(maze):
-    path,cost = find_optimal_path(maze)
+    path,cost,traversed,visited = find_optimal_path(maze)
     for i in range(0, len(path)):
          x, y = path[i]
          if maze[x][y] not in ['P']:
@@ -54,7 +51,7 @@ def graph_plot(self):
                 Iterations = []
                 for turn in range(0, 100):
                         active_maze = randomize_maze_board(get_maze(i))
-                        path, cost = find_optimal_path(active_maze)
+                        path, cost, t, v = find_optimal_path(active_maze)
                         scores.append(cost)
 
                 freq = {}
@@ -75,8 +72,24 @@ def graph_plot(self):
                 plt.grid(True)
                 plt.savefig('Level ' + str(i) + ' Statistics.png')
 
-        
-                        
+        visited = []
+        traversed = []
+
+        for i in [self.levels]:
+                for turn in range(0, 100):
+                        active_maze = randomize_maze_board(get_maze(i))
+                        path, cost, nodesTraversed, nodesVisited = find_optimal_path(active_maze)
+                        visited.append(nodesVisited)
+                        traversed.append(nodesTraversed)
+                print(visited)
+                print(traversed)
+                fig = plt.figure(figsize=(10, 5))
+                plt.bar(visited, traversed, color='red', width=0.1)
+                plt.title('Level ' + str(i), fontsize=14)
+                plt.xlabel('Visited Nodes', fontsize=14)
+                plt.ylabel('Traversed Nodes', fontsize=14)
+                plt.grid(True)
+                plt.savefig('Visited vs Traversed ' + str(i) + ' Statistics.png')                
 
 if __name__ == "__main__":
         maze = Main()
